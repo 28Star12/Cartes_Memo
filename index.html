@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Générateur de Sons</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 50px; background: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:disabled { background: #ccc; }
+        #audioPlayer { width: 100%; margin-top: 20px; display: none; }
+        .loader { display: none; margin-top: 10px; color: #555; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Générateur de Son IA</h2>
+    <p>Décrivez le son que vous voulez entendre (en anglais pour de meilleurs résultats) :</p>
+    
+    <input type="text" id="promptInput" placeholder="Ex: A small puppy barking">
+    <button id="generateBtn">Générer le son</button>
+    
+    <div id="loader" class="loader">Génération en cours (cela peut prendre 20-30 secondes)...</div>
+    
+    <audio id="audioPlayer" controls></audio>
+</div>
+
+<script>
+    const API_TOKEN = "VOTRE_TOKEN_ICI"; // Remplacez par votre token Hugging Face
+    const MODEL_ID = "cvssp/audioldm-m-full";
+
+    const btn = document.getElementById('generateBtn');
+    const input = document.getElementById('promptInput');
+    const player = document.getElementById('audioPlayer');
+    const loader = document.getElementById('loader');
+
+    btn.addEventListener('click', async () => {
+        const text = input.value;
+        if (!text) return alert("Entrez une description");
+
+        btn.disabled = true;
+        loader.style.display = "block";
+        player.style.display = "none";
+
+        try {
+            const response = await fetch(`https://api-inference.huggingface.co/models/${MODEL_ID}`, {
+                headers: { Authorization: `Bearer ${API_TOKEN}` },
+                method: "POST",
+                body: JSON.stringify({ inputs: text }),
+            });
+
+            if (!response.ok) throw new Error("Erreur lors de la génération");
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            player.src = url;
+            player.style.display = "block";
+        } catch (error) {
+            alert("Erreur : " + error.message);
+        } finally {
+            btn.disabled = false;
+            loader.style.display = "none";
+        }
+    });
+</script>
+
+</body>
+</html>
