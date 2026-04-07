@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Flashcards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Générateur de Flashcards 🧠</h1>
+        <p>Entre ton cours ci-dessous. Mets la question et la réponse sur la même ligne, séparées par un tiret ( - ). Une carte par ligne.</p>
+        <p><em>Exemple : Quelle est la capitale de la France ? - Paris</em></p>
+
+        <textarea id="inputText" placeholder="Question 1 - Réponse 1&#10;Question 2 - Réponse 2"></textarea>
+        
+        <button id="generateBtn">Générer les cartes</button>
+
+        <div id="flashcards-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
